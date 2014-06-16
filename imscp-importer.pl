@@ -13,13 +13,15 @@ use iMSCP::Dialog;
 
 use version;
 
+
+
 $ENV{'LC_MESSAGES'} = 'C';
 $ENV{'IMSCP_CLEAR_SCREEN'} = 0;
 
 # Global variable that holds questions
 %main::questions = () if ! %main::questions;
 
-newDebug('imscp-data-importer.log');
+newDebug('imscp-importer.log');
 
 # Entering in silent mode
 silent(1);
@@ -28,7 +30,7 @@ silent(1);
 my $bootstrapper = iMSCP::Bootstrapper->getInstance();
 $bootstrapper->boot();
 
-# Check for i-MSCP process
+# Check for i-MSCP processes
 for(
 	'imscp-backup-all', 'imscp-backup-imscp', 'imscp-dsk-quota', 'imscp-srv-traff', 'imscp-vrl-traff',
     'awstats_updateall.pl'
