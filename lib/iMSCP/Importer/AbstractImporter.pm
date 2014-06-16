@@ -108,7 +108,7 @@ sub _init
 	$this->{'limits'} = [];
 
 	# Default limit for items per run
-	$this->{'defaultLimit'} = 50;
+	$this->{'defaultLimit'} = 1000;
 
 	# Selected import data
 	$this->{'selectedData'} = [];
