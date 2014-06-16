@@ -2,6 +2,8 @@
 
 package iMSCP::DataImporter::Application;
 
+use strict;
+use warnings;
 use iMSCP::Debug;
 use iMSCP::Bootstrapper;
 use iMSCP::HooksManager;
@@ -12,9 +14,9 @@ use parent 'Common::SingletonClass';
 
 =head1 DESCRIPTION
 
- iMSCP Data Importer Application package.
+ i-MSCP data importer application package.
 
- This is the central package for the i-MSCP Data Importer.
+ This is the central package for the i-MSCP data importer.
 
 =head1 PUBLIC METHODS
 
@@ -101,9 +103,7 @@ sub _init
 	$this->sayWelcome();
 
 	# Check for requirements
-	unless($this->checkRequirements()) {
-		exit 0;
-	}
+	exit 0 unless $this->checkRequirements();
 
 	# Start initialization
 	$this->initDB();
@@ -149,7 +149,6 @@ EOF
 	}
 
 	$this;
-
 }
 
 =item checkRequirements()
@@ -167,7 +166,7 @@ sub checkRequirements
 	my $bootstrapper = $this->{'bootstrapper'};
 
 	# Check for i-MSCP version (this system)
-	if(!int($main::imscpConfig{'BuildDate'}) < 20140608) {
+	if(int($main::imscpConfig{'BuildDate'}) < 20140608) {
 		$this->getDialog()->set('ok-label', 'ok');
 		$this->getDialog()->msgbox(<<EOF);
 
@@ -191,6 +190,18 @@ At least one i-MSCP process is currently running on your system. You must wait u
 EOF
 			exit 0;
 		}
+	}
+
+	if(! -x '/usr/bin/rsync') {
+			$this->getDialog()->set('ok-label', 'ok');
+
+			$this->getDialog()->msgbox(<<EOF);
+
+All required packages are not installed.
+
+Please install the \\Zbrsync\\Zn package.
+
+EOF
 	}
 
 	$this;
@@ -232,7 +243,6 @@ sub initDialog
 
 	$this;
 }
-
 
 =back
 

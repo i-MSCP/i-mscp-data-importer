@@ -1,29 +1,28 @@
 #!/usr/bin/perl
 
-package iMSCP::Importer::AbstractImporter;
+package iMSCP::DataImporter::Exporter::AbstractExporter;
 
 use strict;
 use warnings;
 
 use iMSCP::Debug;
-use iMSCP::Config;
-use iMSCP::Execute;
-use iMSCP::File,
-use iMSCP::Dir;
-use iMSCP::Database;
-use iMSCP::Dialog;
+use DBI;
 
 use parent 'Common::Object';
 
 =head1 DESCRIPTION
 
- i-MSCP importer abstract class.
+ Abstract class for all exporters.
 
 =head1 PUBLIC METHODS
 
 =over 4
 
 =item setData()
+
+ Sets data
+
+ Return self
 
 =cut
 
@@ -34,7 +33,7 @@ sub setData
 
 =item ValidateVersion()
 
- Validate remote software version for compatibility with the importer
+ Validate remote software version for compatibility with this importer
 
  Return int 1 on success, 0 on failure
 
@@ -79,7 +78,7 @@ sub validateFileAccess
 
 =item init()
 
- Initialize instance
+ Initialize the importer
 
  Return self
 
@@ -91,11 +90,11 @@ sub _init
 
 	# Database
 	$this->{'databaseHost'} = '';
+	$this->{'databasePort'} = '';
 	$this->{'databaseUser'} = '';
 	$this->{'databasePassword'} = '';
 	$this->{'databaseName'} = '';
 	$this->{'databasePrefix'} = '';
-	$this->{'database'} = '';
 
 	# Files
 	$this->{'webFilesPath'} = '';
