@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-package iMSCP::DataImporter::Importer::DbImporter;
+package iMSCP::DataImporter::Importer::ErrorPageImporter;
 
 use strict;
 use warnings;
