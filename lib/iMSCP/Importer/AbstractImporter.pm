@@ -34,7 +34,7 @@ sub setData
 
 =item ValidateVersion()
 
- Validate remote version
+ Validate remote software version for compatibility with the importer
 
  Return int 1 on success, 0 on failure
 
@@ -68,7 +68,7 @@ sub validateDatabaseAccess()
 
 sub validateFileAccess
 {
-	fatal(sprintf('%s must implement the ValidateVersion() method', ref($_[0])))
+	fatal(sprintf('%s must implement the validateFileAccess() method', ref($_[0])))
 }
 
 =back
