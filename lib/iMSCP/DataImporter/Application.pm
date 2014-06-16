@@ -7,11 +7,14 @@ use iMSCP::Bootstrapper;
 use iMSCP::HooksManager;
 use iMSCP::Database;
 use iMSCP::Dialog;
+use version;
 use parent 'Common::SingletonClass';
 
 =head1 DESCRIPTION
 
- iMSCP Data Importer.
+ iMSCP Data Importer Application package.
+
+ This is the central package for the i-MSCP Data Importer.
 
 =head1 PUBLIC METHODS
 
@@ -21,20 +24,24 @@ use parent 'Common::SingletonClass';
 
  Run application
 
+ Return self
+
 =cut
 
 sub run
 {
 	my $this = $_[0];
 
-	undef;
+	$this;
 }
 
 =cut
 
 =item getDB()
 
- Returns the database object.
+ Returns the database object
+
+ Return database object
 
 =cut
 
@@ -47,7 +54,9 @@ sub getDB
 
 =item getDialog()
 
- Returns the template object.
+ Returns the dialog object
+
+ Return Dialog object
 
 =cut
 
@@ -68,6 +77,8 @@ sub getDialog
 
  Initialize instance
 
+ Return self
+
 =cut
 
 sub _init
@@ -78,10 +89,10 @@ sub _init
 	newDebug('imscp-data-importer.log');
 
 	# Entering in silent mode
-    silent(1);
+	silent(1);
 
 	# Bootstrap environment
-    $this->{'bootstrapper'} = iMSCP::Bootstrapper->getInstance()->boot({'nolock' => 'yes'});
+	$this->{'bootstrapper'} = iMSCP::Bootstrapper->getInstance()->boot({'nolock' => 'yes'});
 
 	# Init dialog
 	$this->initDialog();
@@ -102,7 +113,6 @@ sub _init
 	$this;
 }
 
-
 =item sayWelcome()
 
  Say welcome
@@ -115,19 +125,28 @@ sub sayWelcome
 {
 	my $this = $_[0];
 
-	$this->getDialog()->msgbox(<<EOF);
+	my $dialog = $this->getDialog();
 
-Welcome to the i-MSCP Data Importer.
+	$dialog->set('yes-label', 'Continue');
+	$dialog->set('no-label', 'Abort');
 
-This importer allow to import data from another control panel located on remote server.
+	if($dialog->yesno(<<EOF)) {
+
+Welcome to the i-MSCP Data Importer Dialog.
+
+This importer allow to import data from another control panel located on a remote server.
 
 Just follow the given instructions in next dialogs.
 
-Note: For any help, post on our forum at http://forum.i-mscp.net
+\\ZbNote:\\Zn For any help, post on our forum at http://forum.i-mscp.net
 
 Thank you for choosing i-MSCP.
 
 EOF
+
+		$this->getDialog()->msgbox("\nData importer dialog has been aborted...");
+		exit 0;
+	}
 
 	$this;
 
@@ -147,12 +166,24 @@ sub checkRequirements
 
 	my $bootstrapper = $this->{'bootstrapper'};
 
+	# Check for i-MSCP version (this system)
+	if(!int($main::imscpConfig{'BuildDate'}) < 20140608) {
+		$this->getDialog()->set('ok-label', 'ok');
+		$this->getDialog()->msgbox(<<EOF);
+
+Your i-MSCP version is not compatible with this importer. Please update your system to i-MSCP 1.1.11 first.
+
+EOF
+	}
+
 	# Check for i-MSCP processes
 	for(
 		'imscp-backup-all', 'imscp-backup-imscp', 'imscp-dsk-quota', 'imscp-srv-traff', 'imscp-vrl-traff',
     	'awstats_updateall.pl', 'imscp'
 	) {
 		if(!$bootstrapper->lock("/tmp/$_.lock", 'nowait')) {
+			$this->getDialog()->set('ok-label', 'ok');
+
 			$this->getDialog()->msgbox(<<EOF);
 
 At least one i-MSCP process is currently running on your system. You must wait until the end of any i-MSCP process.
@@ -160,15 +191,6 @@ At least one i-MSCP process is currently running on your system. You must wait u
 EOF
 			exit 0;
 		}
-	}
-
-	# Check for i-MSCP version (this system)
-	if($main::imscpConfig{'BuildDate'} < 20140608 && qv($main::imscpConfig{'Version'} < qv('v1.1.11'))) {
-		$this->getDialog()->msgbox(<<EOF);
-
-Your i-MSCP version is not compatible with this importer. Please update your system to i-MSCP 1.1.11 first.
-
-EOF
 	}
 
 	$this;
@@ -194,7 +216,7 @@ sub initDB
 
 =item initDialog()
 
- Initialize dialog object.
+ Initialize dialog object
 
  Return self
 
@@ -206,7 +228,7 @@ sub initDialog
 
 	$this->{'dialogObj'} = iMSCP::Dialog->factory();
 	$this->{'dialogObj'}->set('title', 'i-MSCP Data Importer Dialog');
-	$this->{'dialogObj'}->set('backtitle', 'i-MSCP - Data Importer');
+	$this->{'dialogObj'}->set('backtitle', 'i-MSCP Data Importer');
 
 	$this;
 }
