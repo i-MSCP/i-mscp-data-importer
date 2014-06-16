@@ -36,7 +36,7 @@ for(
 	if(! $bootstrapper->getInstance()->lock("/tmp/$_.lock", 'nowait')) {
 		iMSCP::Dialog->factory()->msgbox(<<EOF);
 
-At least one i-MSCP process is currently running on your system You must wait until the end of any i-MSCP processes.
+At least one i-MSCP process is currently running on your system. You must wait until the end of any i-MSCP process.
 
 EOF
 		exit 0;
