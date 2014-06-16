@@ -77,6 +77,14 @@ sub validateFileAccess
 
 =over 4
 
+=item init()
+
+ Initialize instance
+
+ Return self
+
+=cut
+
 sub _init
 {
 	my $this = $_[0];
