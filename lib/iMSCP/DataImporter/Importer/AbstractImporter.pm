@@ -19,8 +19,8 @@ sub import
 {
 	my ($this, $oldID, $data, $additionalData) = @_;
 
-	$data ||= [];
-	$additionalData ||= [];
+	$data ||= [];
+	$additionalData ||= [];
 }
 
 =item
