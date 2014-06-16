@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-package iMSCP::DataImporter::Importer::SubAlsImporter;
+package iMSCP::DataImporter::Importer::AliasImporter;
 
 use strict;
 use warnings;

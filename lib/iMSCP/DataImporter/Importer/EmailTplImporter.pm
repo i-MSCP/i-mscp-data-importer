@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-package iMSCP::DataImporter::Importer::AlsImporter;
+package iMSCP::DataImporter::Importer::EmailImporter;
 
 use strict;
 use warnings;
